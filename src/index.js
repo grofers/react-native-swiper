@@ -317,8 +317,8 @@ export default class extends Component {
     let loopVal = this.props.loop ? 2 : 0
     initState.offset[initState.dir] =
       initState.dir === 'y'
-        ? initState.height * (props.index + loopVal)
-        : initState.width * (props.index + loopVal)
+        ? (initState.height * (props.index + loopVal)) - adjacentViewDiffWidth
+        : (initState.width * (props.index + loopVal)) - adjacentViewDiffWidth
 
     this.internals = {
       ...this.internals,
@@ -394,52 +394,52 @@ export default class extends Component {
             scrollView.scrollTo(
               this.props.horizontal === false
                 ? {
-                    x: 0,
-                    y: 2 * this.state.height - offsetDiff,
-                    animated: false
-                  }
+                  x: 0,
+                  y: 2 * this.state.height - offsetDiff,
+                  animated: false
+                }
                 : {
-                    x: 2 * this.state.width - offsetDiff,
-                    y: 0,
-                    animated: false
-                  }
+                  x: 2 * this.state.width - offsetDiff,
+                  y: 0,
+                  animated: false
+                }
             )
           } else if (this.state.index === 1) {
             this.props.horizontal === false
               ? this.scrollView.scrollTo({
-                  x: 0,
-                  y: 3 * this.state.height - offsetDiff,
-                  animated: false
-                })
+                x: 0,
+                y: 3 * this.state.height - offsetDiff,
+                animated: false
+              })
               : this.scrollView.scrollTo({
-                  x: 3 * this.state.width - offsetDiff,
-                  y: 0,
-                  animated: false
-                })
+                x: 3 * this.state.width - offsetDiff,
+                y: 0,
+                animated: false
+              })
           } else if (this.state.index === this.state.total - 1) {
             this.props.horizontal === false
               ? this.scrollView.scrollTo({
-                  x: 0,
-                  y: this.state.height * (this.state.total + 1) - offsetDiff,
-                  animated: false
-                })
+                x: 0,
+                y: this.state.height * (this.state.total + 1) - offsetDiff,
+                animated: false
+              })
               : this.scrollView.scrollTo({
-                  x: this.state.width * (this.state.total + 1) - offsetDiff,
-                  y: 0,
-                  animated: false
-                })
+                x: this.state.width * (this.state.total + 1) - offsetDiff,
+                y: 0,
+                animated: false
+              })
           } else if (this.state.index === this.state.total - 2) {
             this.props.horizontal === false
               ? this.scrollView.scrollTo({
-                  x: 0,
-                  y: this.state.height * this.state.total - offsetDiff,
-                  animated: false
-                })
+                x: 0,
+                y: this.state.height * this.state.total - offsetDiff,
+                animated: false
+              })
               : this.scrollView.scrollTo({
-                  x: this.state.width * this.state.total - offsetDiff,
-                  y: 0,
-                  animated: false
-                })
+                x: this.state.width * this.state.total - offsetDiff,
+                y: 0,
+                animated: false
+              })
           }
         }
       },
