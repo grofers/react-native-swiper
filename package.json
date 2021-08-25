@@ -14,7 +14,8 @@
     "lint": "standard | snazzy",
     "update": "updtr",
     "precommit": "git diff --name-only --cached --relative | grep '\\.jsx\\?$' | xargs standard | snazzy; if [ $? -ne 0 ]; then exit 1; fi",
-    "test": "npm run lint"
+    "test": "npm run lint",
+    "copy": "cp -R ../react-native-swiper ../react-native-slick-carousel/node_modules"
   },
   "pre-commit": {
     "run": [

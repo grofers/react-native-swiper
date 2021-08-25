@@ -149,7 +149,7 @@ export default class extends Component {
      */
     onIndexChanged: PropTypes.func,
 
-    showAdjacentViews: PropTypes.bool,
+    showAdjacentViews: PropTypes.oneOf(['start', 'end', 'both', 'none']),
     adjacentViewsWidth: PropTypes.number,
     adjacentViewsPadding: PropTypes.number,
     decelerationRate: PropTypes.oneOfType([
@@ -185,7 +185,7 @@ export default class extends Component {
     index: 0,
     onIndexChanged: () => null,
 
-    showAdjacentViews: false,
+    showAdjacentViews: 'none',
     adjacentViewsWidth: 8,
     adjacentViewsPadding: 4,
     decelerationRate: 'normal'
@@ -288,12 +288,14 @@ export default class extends Component {
 
     const isHorizontal = props.horizontal
 
-    const adjacentViewDiffWidth = this.props.showAdjacentViews
+    const adjacentViewDiffWidth = this.props.showAdjacentViews !== 'none'
       ? this.props.adjacentViewsPadding + this.props.adjacentViewsWidth
       : 0
 
-    const horizontalDiff = isHorizontal ? 2 * adjacentViewDiffWidth : 0
-    const verticalDiff = isHorizontal ? 0 : 2 * adjacentViewDiffWidth
+    const sidesCount = this.props.showAdjacentViews === 'both' ? 2 : 1;
+
+    const horizontalDiff = isHorizontal ? sidesCount * adjacentViewDiffWidth : 0
+    const verticalDiff = isHorizontal ? 0 : sidesCount * adjacentViewDiffWidth
 
     if (props.width) {
       initState.width = props.width - horizontalDiff
@@ -338,7 +340,8 @@ export default class extends Component {
     const offset = (this.internals.offset = { x: 0, y: 0 })
     const isHorizontal = this.props.horizontal
     const { adjacentViewDiffWidth } = this.internals
-    const totalAdjacentWidth = 2 * adjacentViewDiffWidth
+    const sidesCount = this.props.showAdjacentViews === 'both' ? 2 : 1;
+    const totalAdjacentWidth = sidesCount * adjacentViewDiffWidth
     const state = {
       width: width - (isHorizontal ? totalAdjacentWidth : 0),
       height: height - (isHorizontal ? 0 : totalAdjacentWidth)
@@ -743,7 +746,7 @@ export default class extends Component {
         overrides[prop] = (e) => originResponder(e, this.fullState(), this)
       }
       if (prop === 'pagingEnabled') {
-        if (props[prop] && props.showAdjacentViews) {
+        if (props[prop] && props.showAdjacentViews !== 'none') {
           overrides[prop] = false
           overrides['snapToOffsets'] = pages.map((x, i) => i * step - snappDiff)
           overrides['snapToAlignment'] = 'center'
@@ -938,12 +941,12 @@ export default class extends Component {
     const loopVal = loop ? 2 : 0
     let pages = []
     let paddingHorizontal =
-      horizontal && showAdjacentViews ? adjacentViewsPadding : 0
+      horizontal && showAdjacentViews !== 'none' ? adjacentViewsPadding : 0
     let paddingVertical =
-      !horizontal && showAdjacentViews ? adjacentViewsPadding : 0
+      !horizontal && showAdjacentViews !== 'none' ? adjacentViewsPadding : 0
 
     const pageStyle = [
-      { width: width, height, paddingHorizontal, paddingVertical },
+      { width: width, height, paddingRight: 0, paddingLeft: 50, paddingVertical,justifyContent: 'flex-start'},
       styles.slide
     ]
 
@@ -952,8 +955,8 @@ export default class extends Component {
       height,
       paddingHorizontal,
       paddingVertical,
-      justifyContent: 'center',
-      alignItems: 'center'
+      justifyContent: 'flex-start',
+      alignItems: 'flex-start'
     }
     // For make infinite at least total > 1
     if (total > 1) {
